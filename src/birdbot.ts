@@ -1,67 +1,27 @@
 import Discord, { TextChannel } from 'discord.js';
-import dotenv from "dotenv";
-dotenv.config({ path: ".env" });
+import dotenv from 'dotenv';
+import {
+  generalChatId,
+  birdBotImage,
+  multilanguageChirps,
+  randomBotTalks,
+  simpleChirps, botPuppetChatId,
+} from './constants';
+
+dotenv.config({ path: '.env' });
 
 const client = new Discord.Client();
-const chirps = [
-  'ligjërim :flag_al:',
-  'чырык :flag_by:',
-  'cvrkut :flag_ba:',
-  'весел :flag_bg:',
-  'cvrkut :flag_hr:',
-  'cvrlikání :flag_cz:',
-  'pippe :flag_dk:',
-  'piepen :flag_nl:',
-  'siristama :flag_ee:',
-  'visertää :flag_fi:',
-  'gazouiller :flag_fr:',
-  'tsjilje :flag_nl:',
-  'zwitschern :flag_de:',
-  'τερέτισμα :flag_gr:',
-  'csipog :flag_hu:',
-  'Kyrr :flag_is:',
-  'chirp :flag_ie:',
-  'cinguettio :flag_it:',
-  'čiepstēt :flag_lv:',
-  'čiauškėti :flag_lt:',
-  'весел :flag_mk:',
-  'chirp :flag_us:',
-  'kvitre :flag_no:',
-  'ćwierkanie :flag_pl:',
-  'chilro :flag_pt:',
-  'ciripit :flag_ro:',
-  'чирик-чирик :flag_ru:',
-  'cvrlikání :flag_sk:',
-  'Cvrkutati :flag_si:',
-  'chirrido :flag_es:',
-  'kvittra :flag_se:',
-  'цвіріньк :flag_ua:',
-];
-const simpleChirps = ['chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp'];
 
-const topics = ['beep beep', 'boop boop'];
-const botTalks = ['chirp'];
+const mixedChirp = [...multilanguageChirps, ...simpleChirps];
 
-const mixedChirp = [...chirps, ...simpleChirps];
-const birdBotImage = (phrase: string) => `━━━━━━━━━━
-　        ${phrase}
-'━━┳━━━━━━━
-　　╰╮
-　　╭━━╮
-　　┃▍▍┃
-　　╱　　╰╲▁▁
-　　▔▏╰╰╰╰╱
-　　　╲▁▁▁╱
-　　　　┃┃
-━━━━┻┻━━━━`;
 client.on('message', (msg) => {
   if (msg.content === '!birdbot chirp') {
     msg.reply('chirp chirp!');
     return;
   }
   if (msg.content === '!birdbot chirp random') {
-    const ind = Math.floor(Math.random() * chirps.length);
-    msg.reply(chirps[ind]);
+    const ind = Math.floor(Math.random() * simpleChirps.length);
+    msg.reply(multilanguageChirps[ind]);
     return;
   }
 
@@ -84,8 +44,9 @@ client.on('message', (msg) => {
   }
 
   if (msg.content.startsWith('!birdbot topic')) {
-    const ind = Math.floor(Math.random() * topics.length);
-    return msg.reply(`*New topic:* ${topics[ind]}`);
+    const ind = Math.floor(Math.random() * randomBotTalks.length);
+
+    return msg.reply(`*New topic:* ${randomBotTalks[ind]}`);
   }
 
   if (msg.content.startsWith('!birdbot')) {
@@ -93,8 +54,8 @@ client.on('message', (msg) => {
     return msg.reply(mixedChirp[ind]);
   }
 
-  if (msg.channel.id === '790538903601283073') {
-    const channel = client.channels.cache.get('768379777416691752') as TextChannel;
+  if (msg.channel.id === botPuppetChatId) {
+    const channel = client.channels.cache.get(generalChatId) as TextChannel;
     return channel && channel.send(msg.content);
   }
 });
@@ -102,7 +63,7 @@ client.on('message', (msg) => {
 client.login(process.env.BOTTOKEN);
 
 setInterval(() => {
-  const channel = client.channels.cache.get('768379777416691752') as TextChannel;
-  const ind = Math.floor(Math.random() * botTalks.length) ;
-  channel && channel.send(birdBotImage(botTalks[ind]));
-}, 60000 * 60 * 15);
+  const channel = client.channels.cache.get(generalChatId) as TextChannel;
+  const ind = Math.floor(Math.random() * randomBotTalks.length);
+  if (channel) channel.send(birdBotImage(randomBotTalks[ind]));
+}, 1000 * 60 * 60 * 24 * 5);

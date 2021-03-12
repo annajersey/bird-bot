@@ -16,6 +16,43 @@
     "plugins": [
         "@typescript-eslint"
     ],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".ts" ]
+            }
+        }
+    },
     "rules": {
+        "complexity": [
+            "error", 20],
+        "max-depth": [
+            "error", 4],
+        "max-nested-callbacks": [
+            "error", 3],
+        "max-params": [
+            "error", 5],
+        "max-statements": [
+            "error",
+            34,
+            {
+                "ignoreTopLevelFunctions": true
+            }
+        ], 
+        "import/no-named-as-default": "off",
+        "import/no-named-as-default-member": "off",
+        "import/prefer-default-export": "off",
+        "import/extensions": [
+            "error",
+            "always",
+            {
+                "js": "never",
+                "ts": "never"
+            }
+        ],
+        "prefer-promise-reject-errors": "warn",
+        "consistent-return": "off"
+
     }
 }
+
