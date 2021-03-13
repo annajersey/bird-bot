@@ -1,18 +1,13 @@
 import Discord, { TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import {
-  Sequelize,
-
-  DataTypes,
-} from 'sequelize';
-import {
   generalChatId,
-  birdBotImage,
   multilanguageChirps,
   randomBotTalks,
   simpleChirps, botPuppetChatId,
 } from './constants';
 import { Options, Currency } from './db';
+import { catchTheBird, sendRandomBird } from './functions';
 
 dotenv.config({ path: '.env' });
 
@@ -25,27 +20,9 @@ client.once('ready', async () => {
   await Options.sync();
 });
 
-client.on('message', async (msg: Discord.Message) => {
+client.on('message', (msg: Discord.Message) => {
   if (msg.content === '!catchbird') {
-    try {
-      const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
-      if (!canCatch) return msg.channel.send('Bird flew away...');
-      let amountData = await Currency.findOne({ where: { userID: msg.author.id } });
-      if (amountData) {
-        await amountData.increment('amount');
-      } else {
-        amountData = await Currency.create({
-          userID: msg.author.id,
-          amount: 1,
-        });
-      }
-      await Options.destroy({ where: { key: 'currencyAvailable' } });
-      const amount = amountData.get('amount') as number;
-      return msg.channel.send(`Nice catch, ${msg.author}! You now have ${amount} bird${amount > 1 ? 's' : ''}!`);
-    } catch (e) {
-      console.log(e);
-      return msg.channel.send('Error');
-    }
+    catchTheBird(msg);
   }
 
   if (msg.content === '!birdbot chirp') {
@@ -87,6 +64,10 @@ client.on('message', async (msg: Discord.Message) => {
     return msg.reply(mixedChirp[ind]);
   }
 
+  if (msg.content === '!send random bird' && msg.member && msg.member.hasPermission('ADMINISTRATOR')) {
+    sendRandomBird(client);
+  }
+
   if (msg.channel.id === botPuppetChatId) {
     const channel = client.channels.cache.get(generalChatId) as TextChannel;
     return channel && channel.send(msg.content);
@@ -95,14 +76,7 @@ client.on('message', async (msg: Discord.Message) => {
 
 client.login(process.env.BOTTOKEN);
 
-setInterval(async () => {
-  const channel = client.channels.cache.get(generalChatId) as TextChannel;
-  const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
-  if (!canCatch) {
-    await Options.create({
-      key: 'currencyAvailable',
-      value: 1,
-    });
-  }
-  if (channel) channel.send(birdBotImage('*A wild bird appeared!\n Type* !catchbird *to catch the bird*'));
-}, 1000 * 60 * 10 * 30);
+setInterval(() => {
+  sendRandomBird(client);
+}, 1000 * 60 * 60 * 3);
+

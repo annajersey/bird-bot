@@ -32,13 +32,7 @@
             "error", 3],
         "max-params": [
             "error", 5],
-        "max-statements": [
-            "error",
-            40,
-            {
-                "ignoreTopLevelFunctions": true
-            }
-        ], 
+
         "import/no-named-as-default": "off",
         "import/no-named-as-default-member": "off",
         "import/prefer-default-export": "off",

@@ -1,5 +1,5 @@
-export const generalChatId = '783621851259469835';
-export const botPuppetChatId = '790538903601283073';
+export const generalChatId = '768379777416691752';
+export const botPuppetChatId = '820390132078870550';
 
 export const multilanguageChirps = [
   'ligjërim :flag_al:',
@@ -36,16 +36,16 @@ export const multilanguageChirps = [
   'цвіріньк :flag_ua:',
 ];
 
-export const randomTopics = ['beep beep', 'boop boop', 'some random topic'];
+export const randomTopics = ['random topic 1', 'random topic 2', 'random topic 3'];
 
-export const randomBotTalks = ['chirp'];
+export const randomBotTalks = ['random talk 1', 'random talk 2', 'random talk 3'];
 
-export const simpleChirps = ['chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp'];
+export const simpleChirps = ['chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp', 'chip'];
 
 /* eslint-disable no-irregular-whitespace */
-export const birdBotImage = (phrase: string) => `━━━━━━━━━━━━━━
+export const birdBotImage = (phrase: string) => `━━━━━━━━━━━━━━━━━
 　        ${phrase}
-━━━┳━━━━━━━━━━━
+━━━┳━━━━━━━━━━━━━
 　　╰╮
 　　╭━━╮
 　　┃▍▍┃
