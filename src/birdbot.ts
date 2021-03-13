@@ -1,12 +1,18 @@
 import Discord, { TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import {
+  Sequelize,
+
+  DataTypes,
+} from 'sequelize';
+import {
   generalChatId,
   birdBotImage,
   multilanguageChirps,
   randomBotTalks,
   simpleChirps, botPuppetChatId,
 } from './constants';
+import { Options, Currency } from './db';
 
 dotenv.config({ path: '.env' });
 
@@ -14,7 +20,34 @@ const client = new Discord.Client();
 
 const mixedChirp = [...multilanguageChirps, ...simpleChirps];
 
-client.on('message', (msg) => {
+client.once('ready', async () => {
+  await Currency.sync();
+  await Options.sync();
+});
+
+client.on('message', async (msg: Discord.Message) => {
+  if (msg.content === '!catchbird') {
+    try {
+      const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
+      if (!canCatch) return msg.channel.send('Bird flew away...');
+      let amountData = await Currency.findOne({ where: { userID: msg.author.id } });
+      if (amountData) {
+        await amountData.increment('amount');
+      } else {
+        amountData = await Currency.create({
+          userID: msg.author.id,
+          amount: 1,
+        });
+      }
+      await Options.destroy({ where: { key: 'currencyAvailable' } });
+      const amount = amountData.get('amount') as number;
+      return msg.channel.send(`Nice catch, ${msg.author}! You now have ${amount} bird${amount > 1 ? 's' : ''}!`);
+    } catch (e) {
+      console.log(e);
+      return msg.channel.send('Error');
+    }
+  }
+
   if (msg.content === '!birdbot chirp') {
     msg.reply('chirp chirp!');
     return;
@@ -62,8 +95,14 @@ client.on('message', (msg) => {
 
 client.login(process.env.BOTTOKEN);
 
-setInterval(() => {
+setInterval(async () => {
   const channel = client.channels.cache.get(generalChatId) as TextChannel;
-  const ind = Math.floor(Math.random() * randomBotTalks.length);
-  if (channel) channel.send(birdBotImage(randomBotTalks[ind]));
-}, 1000 * 60 * 60 * 24 * 5);
+  const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
+  if (!canCatch) {
+    await Options.create({
+      key: 'currencyAvailable',
+      value: 1,
+    });
+  }
+  if (channel) channel.send(birdBotImage('*A wild bird appeared!\n Type* !catchbird *to catch the bird*'));
+}, 1000 * 60 * 10 * 30);

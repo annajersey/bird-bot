@@ -1,4 +1,4 @@
-export const generalChatId = '768379777416691752';
+export const generalChatId = '783621851259469835';
 export const botPuppetChatId = '790538903601283073';
 
 export const multilanguageChirps = [
@@ -43,9 +43,9 @@ export const randomBotTalks = ['chirp'];
 export const simpleChirps = ['chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp'];
 
 /* eslint-disable no-irregular-whitespace */
-export const birdBotImage = (phrase: string) => `━━━━━━━━━━
+export const birdBotImage = (phrase: string) => `━━━━━━━━━━━━━━
 　        ${phrase}
-━━━┳━━━━━━━
+━━━┳━━━━━━━━━━━
 　　╰╮
 　　╭━━╮
 　　┃▍▍┃

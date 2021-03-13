@@ -34,7 +34,7 @@
             "error", 5],
         "max-statements": [
             "error",
-            34,
+            40,
             {
                 "ignoreTopLevelFunctions": true
             }
