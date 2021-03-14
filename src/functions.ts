@@ -1,10 +1,13 @@
 import { Client, Message, TextChannel } from 'discord.js';
-import { birdBotImage, generalChatId, prefixList } from './constants';
-import { Currency, Options } from './db';
+import { birdBotImage, prefixList } from './constants';
+import {
+  Currency, getGeneralChatId, Options, updateGeneralChatId,
+} from './db';
 
 export const getPrefix = (command: string) => prefixList.find((p: string) => command.startsWith(p));
 
 export const sendRandomBird = async (client: Client) => {
+  const generalChatId = getGeneralChatId();
   const channel = client.channels.cache.get(generalChatId) as TextChannel;
   const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
   if (!canCatch) {
@@ -15,7 +18,15 @@ export const sendRandomBird = async (client: Client) => {
   }
   if (channel) channel.send(birdBotImage('*A random bird appeared!\n Type* !catchbird *to catch the bird*'));
 };
-
+export const setGeneralChatId = async (message: Message) => {
+  const generalChatID = message.content.split(' ').pop()!;
+  try {
+    await updateGeneralChatId(generalChatID);
+    message.channel.send('General ChatID changed :white_check_mark:');
+  } catch (e) {
+    message.channel.send('Error');
+  }
+};
 export const catchTheBird = async (message: Message) => {
   try {
     const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });

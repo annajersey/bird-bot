@@ -1,5 +1,3 @@
-export const generalChatId = '768379777416691752';
-export const botParrotChatId = '820390132078870550';
 export const prefixList = ['!birdbot', '!bb', '<@788147829315076106>', '<@!788147829315076106>'];
 export const multilanguageChirps = [
   'ligjërim :flag_al:',
@@ -55,3 +53,4 @@ export const birdBotImage = (phrase: string) => `━━━━━━━━━━�
 　　　　┃┃
 ━━━━┻┻━━━━`;
 /* eslint-enable no-irregular-whitespace */
+export const botParrotChatId = '820390132078870550'; // TODO: save in DB as general chat id
