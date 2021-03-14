@@ -45,7 +45,8 @@
             }
         ],
         "prefer-promise-reject-errors": "warn",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "default-case": "off"
 
     }
 }

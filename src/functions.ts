@@ -1,6 +1,8 @@
 import { Client, Message, TextChannel } from 'discord.js';
-import { birdBotImage, generalChatId } from './constants';
+import { birdBotImage, generalChatId, prefixList } from './constants';
 import { Currency, Options } from './db';
+
+export const getPrefix = (command: string) => prefixList.find((p: string) => command.startsWith(p));
 
 export const sendRandomBird = async (client: Client) => {
   const channel = client.channels.cache.get(generalChatId) as TextChannel;
@@ -34,4 +36,12 @@ export const catchTheBird = async (message: Message) => {
     console.log(e);
     return message.channel.send('Error');
   }
+};
+
+export const randomiseBirdAppearance = (client: Client) => {
+  const rand = Math.ceil(Math.random() * 24);
+  setTimeout(() => {
+    sendRandomBird(client);
+    randomiseBirdAppearance(client);
+  }, 1000 * 60 * 60 * rand);
 };

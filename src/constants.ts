@@ -1,6 +1,6 @@
 export const generalChatId = '768379777416691752';
-export const botPuppetChatId = '820390132078870550';
-
+export const botParrotChatId = '820390132078870550';
+export const prefixList = ['!birdbot', '!bb', '<@788147829315076106>', '<@!788147829315076106>'];
 export const multilanguageChirps = [
   'ligjërim :flag_al:',
   'чырык :flag_by:',
@@ -41,7 +41,7 @@ export const randomTopics = ['random topic 1', 'random topic 2', 'random topic 3
 export const randomBotTalks = ['random talk 1', 'random talk 2', 'random talk 3'];
 
 export const simpleChirps = ['chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp', 'chip'];
-
+export const mixedChirps = [...multilanguageChirps, ...simpleChirps];
 /* eslint-disable no-irregular-whitespace */
 export const birdBotImage = (phrase: string) => `━━━━━━━━━━━━━━━━━
 　        ${phrase}

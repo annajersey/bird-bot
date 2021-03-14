@@ -1,19 +1,24 @@
-import Discord, { TextChannel } from 'discord.js';
+import Discord, { Message, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import {
   generalChatId,
   multilanguageChirps,
   randomBotTalks,
-  simpleChirps, botPuppetChatId,
+  simpleChirps,
+  mixedChirps,
+  botParrotChatId,
 } from './constants';
 import { Options, Currency } from './db';
-import { catchTheBird, sendRandomBird } from './functions';
+import {
+  catchTheBird,
+  getPrefix,
+  randomiseBirdAppearance,
+  sendRandomBird,
+} from './functions';
 
 dotenv.config({ path: '.env' });
 
 const client = new Discord.Client();
-
-const mixedChirp = [...multilanguageChirps, ...simpleChirps];
 
 client.once('ready', async () => {
   await Currency.sync();
@@ -21,54 +26,43 @@ client.once('ready', async () => {
 });
 
 client.on('message', (msg: Discord.Message) => {
-  if (msg.content === '!catchbird') {
-    catchTheBird(msg);
-  }
+  const handleCommand = (command: string, handle: () => void) => {
+    const prefix = getPrefix(msg.content);
+    if (!prefix) return;
 
-  if (msg.content === '!birdbot chirp') {
-    msg.reply('chirp chirp!');
-    return;
-  }
-  if (msg.content === '!birdbot chirp random') {
+    const cleanCommand = msg.content.replace(prefix, '').trim();
+    if (cleanCommand === command) {
+      return handle();
+    }
+  };
+
+  const handleAdminCommand = (command: string, handle: () => void) => {
+    if (!msg.member || !msg.member.hasPermission('ADMINISTRATOR')) return;
+    if (msg.content.includes(command)) { return handle(); }
+  };
+
+  if (msg.content === '!catchbird') return catchTheBird(msg);
+
+  handleCommand('', () => {
+    const ind = Math.floor(Math.random() * mixedChirps.length);
+    return msg.reply(mixedChirps[ind]);
+  });
+  handleCommand('chirp random', () => {
     const ind = Math.floor(Math.random() * simpleChirps.length);
-    msg.reply(multilanguageChirps[ind]);
-    return;
-  }
-
-  if (msg.content.startsWith('!birdbot hug')) {
-    if (!msg.mentions.users.size) return;
-    return msg.channel.send(`${msg.author} hugs ${msg.mentions.users.first()}`);
-  }
-
-  if (msg.content.startsWith('!birdbot tell ')) {
-    if (!msg.mentions.users.size) return;
-    return msg.channel.send(`${msg.mentions.users.first()} chirp chirp`);
-  }
-
-  if (msg.content.startsWith('!birdbot quote the raven')) {
-    return msg.reply('nevermore');
-  }
-
-  if (msg.content.startsWith('!birdbot what is the word')) {
-    return msg.reply('bird bird bird :bird:');
-  }
-
-  if (msg.content.startsWith('!birdbot topic')) {
+    return msg.reply(multilanguageChirps[ind]);
+  });
+  handleCommand('quote the raven', () => msg.reply('nevermore'));
+  handleCommand('hug', () => msg.channel.send(`${msg.author} hugs ${msg.mentions.users.first() || 'an air'}`));
+  handleCommand('tell', () => { if (msg.mentions.users.size) msg.channel.send(`${msg.mentions.users.first()} chirp chirp`); });
+  handleCommand('what is the word', () => msg.reply('bird bird bird :bird:'));
+  handleCommand('topic', () => {
     const ind = Math.floor(Math.random() * randomBotTalks.length);
-
     return msg.reply(`*New topic:* ${randomBotTalks[ind]}`);
-  }
+  });
 
-  if (msg.content.startsWith('!birdbot')) {
-    const ind = Math.floor(Math.random() * mixedChirp.length);
-    return msg.reply(mixedChirp[ind]);
-  }
+  handleAdminCommand('!send random bird', () => sendRandomBird(client));
 
-  if (msg.content === '!send random bird' && msg.member && msg.member.hasPermission('ADMINISTRATOR')) {
-    sendRandomBird(client);
-  }
-
-  if (msg.channel.id === botPuppetChatId) {
+  if (msg.channel.id === botParrotChatId) {
     const channel = client.channels.cache.get(generalChatId) as TextChannel;
     return channel && channel.send(msg.content);
   }
@@ -76,10 +70,4 @@ client.on('message', (msg: Discord.Message) => {
 
 client.login(process.env.BOTTOKEN);
 
-(function randomiseBirdAppearance() {
-  const rand = Math.ceil(Math.random() * 24);
-  setTimeout(() => {
-    sendRandomBird(client);
-    randomiseBirdAppearance();
-  }, 1000 * 60 * 60 * rand);
-}());
+randomiseBirdAppearance(client);
