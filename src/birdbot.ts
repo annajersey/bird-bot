@@ -76,7 +76,10 @@ client.on('message', (msg: Discord.Message) => {
 
 client.login(process.env.BOTTOKEN);
 
-setInterval(() => {
-  sendRandomBird(client);
-}, 1000 * 60 * 60 * 3);
-
+(function randomiseBirdAppearance() {
+  const rand = Math.ceil(Math.random() * 24);
+  setTimeout(() => {
+    sendRandomBird(client);
+    randomiseBirdAppearance();
+  }, 1000 * 60 * 60 * rand);
+}());
