@@ -17,7 +17,6 @@ export const multilanguageChirps = [
   'siristama :flag_ee:',
   'visertää :flag_fi:',
   'gazouiller :flag_fr:',
-  'tsjilje :flag_nl:',
   'zwitschern :flag_de:',
   'τερέτισμα :flag_gr:',
   'csipog :flag_hu:',
