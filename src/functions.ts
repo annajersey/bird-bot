@@ -3,12 +3,12 @@ import { birdBotImage, prefixList } from './constants';
 import {
   Currency, getGeneralChatId, Options, updateGeneralChatId,
 } from './db';
+import { getGeneralChannel } from './birdbot';
 
 export const getPrefix = (command: string) => prefixList.find((p: string) => command.startsWith(p));
 
-export const sendRandomBird = async (client: Client) => {
-  const generalChatId = getGeneralChatId();
-  const channel = client.channels.cache.get(generalChatId) as TextChannel;
+export const sendRandomBird = async () => {
+  const generalChannel = getGeneralChannel();
   const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
   if (!canCatch) {
     await Options.create({
@@ -16,7 +16,7 @@ export const sendRandomBird = async (client: Client) => {
       value: 1,
     });
   }
-  if (channel) channel.send(birdBotImage('*A random bird appeared!\n Type* !bb catchbird *to catch the bird*'));
+  if (generalChannel) await generalChannel.send(birdBotImage('*A random bird appeared!\n Type* !bb catchbird *to catch the bird*'));
 };
 export const setGeneralChatId = async (message: Message) => {
   const generalChatID = message.content.split(' ').pop()!;
@@ -57,10 +57,10 @@ export const catchTheBird = async (message: Message) => {
   }
 };
 
-export const randomiseBirdAppearance = (client: Client) => {
+export const randomiseBirdAppearance = () => {
   const rand = Math.ceil(Math.random() * 24);
   setTimeout(() => {
-    sendRandomBird(client);
-    randomiseBirdAppearance(client);
+    sendRandomBird();
+    randomiseBirdAppearance();
   }, 1000 * 60 * 60 * rand);
 };

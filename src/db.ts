@@ -61,7 +61,4 @@ export const updateGeneralChatId = async (newGeneralChatID:string) => {
   }
 };
 
-export const getGeneralChatId = () => {
-  console.log(generalChatId);
-  return generalChatId;
-};
+export const getGeneralChatId = () => generalChatId;

@@ -34,9 +34,9 @@ export const multilanguageChirps = [
   'цвіріньк :flag_ua:',
 ];
 
-export const randomTopics = ['random topic 1', 'random topic 2', 'random topic 3'];
+export const randomTopics = ['random topic 1', 'random topic 2', 'random topic 3']; // TODO: save in DB with admin command
 
-export const randomBotTalks = ['random talk 1', 'random talk 2', 'random talk 3'];
+export const randomBotTalks = ['random talk 1', 'random talk 2', 'random talk 3']; // TODO: save in DB with admin command
 
 export const simpleChirps = ['chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp', 'chip'];
 export const mixedChirps = [...multilanguageChirps, ...simpleChirps];
@@ -53,4 +53,9 @@ export const birdBotImage = (phrase: string) => `━━━━━━━━━━�
 　　　　┃┃
 ━━━━┻┻━━━━`;
 /* eslint-enable no-irregular-whitespace */
-export const botParrotChatId = '820390132078870550'; // TODO: save in DB as general chat id
+export const botParrotChatId = '820390132078870550'; // TODO: save in DB with admin command
+
+export enum UserRole {
+  User = 0,
+  Admin = 1,
+}

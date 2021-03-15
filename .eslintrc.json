@@ -46,7 +46,8 @@
         ],
         "prefer-promise-reject-errors": "warn",
         "consistent-return": "off",
-        "default-case": "off"
+        "default-case": "off",
+        "no-shadow": "off"
 
     }
 }
