@@ -53,6 +53,10 @@ Also:
  > 
  >bot: Nevermore
 
+ >user: !bb tickle @friend
+ > 
+ >bot: @user tickles @friend
+
  >user: @Birdbot what is the word
  > 
  >bot: bird bird bird :bird:
@@ -60,6 +64,7 @@ Also:
  >user: !bb tell @friend he's cute
  > 
  >bot: @friend chirp chirp
+
 
 
 

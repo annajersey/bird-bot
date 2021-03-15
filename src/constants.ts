@@ -65,13 +65,14 @@ Bot Prefixes: !birdbot, !bb, or bot mention.
 **Commands**: 
 !bb chirp: *chirps in random language*
 !bb amount: *check how many birds you have* 
-!bb hug @user: *hugs* 
+!bb hug @user: *hugs @user* 
 !bb tell @user: *conveys info*
 !bb catchbird: *catches a wild bird when it appears* 
 !bb topic: *suggests a topic*
 Also: 
 !bb quote the raven
 !bb what is the word
+!bb tickle @user
 
 **Admin Commands**: 
 !bb send random bird: *make a wild bird to appear*

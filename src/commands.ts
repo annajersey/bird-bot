@@ -32,7 +32,10 @@ const commands: Commands = {
     execute: (msg: Message) => msg.reply('nevermore'),
     role: UserRole.User,
   },
-
+  tickle: {
+    execute: (msg: Message) => msg.channel.send(`${msg.author} tickles ${msg.mentions.users.first() || 'an air'}`),
+    role: UserRole.User,
+  },
   hug: {
     execute: (msg: Message) => msg.channel.send(`${msg.author} hugs ${msg.mentions.users.first() || 'an air'}`),
     role: UserRole.User,
