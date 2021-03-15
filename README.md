@@ -12,7 +12,8 @@ Prefixes:
 
 **Random Bird currency**. 
 
-Once a day at a random time a wild bird will appear. Type !catchbird to catch the bird. Admin also has the power to trigger bird's emergence at any time
+Once a day at a random time a wild bird will appear. 
+Type `!birdbot catchbird` to catch the bird. Type `!bb amount` to check how many birds you have. Admin also has the power to trigger bird's emergence at any time
 
 **Talking Parrot**. 
 

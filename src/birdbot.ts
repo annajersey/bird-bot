@@ -9,7 +9,7 @@ import {
 } from './constants';
 import { DBinit, getGeneralChatId } from './db';
 import {
-  catchTheBird,
+  catchTheBird, checkAmount,
   getPrefix,
   randomiseBirdAppearance,
   sendRandomBird,
@@ -44,9 +44,7 @@ client.on('message', (msg: Discord.Message) => {
     const ind = Math.floor(Math.random() * multilanguageChirps.length);
     return msg.reply(multilanguageChirps[ind]);
   });
-  handleCommand('catchbird', () => {
-    return catchTheBird(msg);
-  });
+  handleCommand('catchbird', () => catchTheBird(msg));
   handleCommand('quote the raven', () => msg.reply('nevermore'));
   handleCommand('hug', () => msg.channel.send(`${msg.author} hugs ${msg.mentions.users.first() || 'an air'}`));
   handleCommand('tell', () => { if (msg.mentions.users.size) msg.channel.send(`${msg.mentions.users.first()} chirp chirp`); });
@@ -55,7 +53,7 @@ client.on('message', (msg: Discord.Message) => {
     const ind = Math.floor(Math.random() * randomBotTalks.length);
     return msg.reply(`*New topic:* ${randomBotTalks[ind]}`);
   });
-
+  handleCommand('amount', () => checkAmount(msg));
   handleAdminCommand('send random bird', () => sendRandomBird(client));
   handleAdminCommand('set general chat id', async () => {
     await setGeneralChatId(msg);

@@ -27,6 +27,14 @@ export const setGeneralChatId = async (message: Message) => {
     message.channel.send('Error');
   }
 };
+export const checkAmount = async (message: Message) => {
+  const amountData = await Currency.findOne({ where: { userID: message.author.id } });
+  if (amountData) {
+    const amount = amountData.get('amount') as number;
+    return message.reply(`You have ${amount} birds`);
+  }
+  return message.reply('Nothing`s here');
+};
 export const catchTheBird = async (message: Message) => {
   try {
     const canCatch = await Options.findOne({ where: { key: 'currencyAvailable' } });
