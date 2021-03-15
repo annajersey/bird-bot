@@ -1,16 +1,22 @@
 import { Message } from 'discord.js';
-import { multilanguageChirps, randomBotTalks, UserRole } from './constants';
+import {
+  helpText, mixedChirps, randomTopics, UserRole,
+} from './constants';
 import {
   catchTheBird, checkAmount, sendRandomBird, setGeneralChatId,
 } from './functions';
 
 type Commands = {[name: string]: {execute: (msg: Message) => void, role: UserRole}}
 const commands: Commands = {
+  help: {
+    execute: (msg: Message) => msg.reply(helpText),
+    role: UserRole.User,
+  },
   chirp:
     {
       execute: (msg: Message) => {
-        const ind = Math.floor(Math.random() * multilanguageChirps.length);
-        return msg.reply(multilanguageChirps[ind]);
+        const ind = Math.floor(Math.random() * mixedChirps.length);
+        return msg.reply(mixedChirps[ind]);
       },
       role: UserRole.User,
     },
@@ -41,8 +47,8 @@ const commands: Commands = {
   },
   topic: {
     execute: (msg: Message) => {
-      const ind = Math.floor(Math.random() * randomBotTalks.length);
-      return msg.reply(`*New topic:* ${randomBotTalks[ind]}`);
+      const ind = Math.floor(Math.random() * randomTopics.length);
+      return msg.reply(`*New topic:* ${randomTopics[ind]}`);
     },
     role: UserRole.User,
   },

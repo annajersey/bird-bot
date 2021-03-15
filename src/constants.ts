@@ -34,11 +34,10 @@ export const multilanguageChirps = [
   'цвіріньк :flag_ua:',
 ];
 
-export const randomTopics = ['random topic 1', 'random topic 2', 'random topic 3']; // TODO: save in DB with admin command
-
-export const randomBotTalks = ['random talk 1', 'random talk 2', 'random talk 3']; // TODO: save in DB with admin command
+export const randomTopics = ['Human beings. Wow', 'What`s your favourite person', 'In what country would you prefer to live']; // TODO: save in DB with admin command
 
 export const simpleChirps = ['chirp chirp', 'chirp?', 'chirp?!', 'chi-chirp', 'tweet tweet', 'tweet tweet tweet', 'chichichirp', 'chip'];
+
 export const mixedChirps = [...multilanguageChirps, ...simpleChirps];
 /* eslint-disable no-irregular-whitespace */
 export const birdBotImage = (phrase: string) => `━━━━━━━━━━━━━━━━━
@@ -59,3 +58,22 @@ export enum UserRole {
   User = 0,
   Admin = 1,
 }
+
+export const helpText = `
+Bot Prefixes: !birdbot, !bb, or bot mention.
+
+**Commands**: 
+!bb chirp: *chirps in random language*
+!bb amount: *check how many birds you have* 
+!bb hug @user: *hugs* 
+!bb tell @user: *conveys info*
+!bb catchbird: *catches a wild bird when it appears* 
+!bb topic: *suggests a topic*
+Also: 
+!bb quote the raven
+!bb what is the word
+
+**Admin Commands**: 
+!bb send random bird: *make a wild bird to appear*
+!bb set general chat id 12345: *sets id of the main chat*
+`
