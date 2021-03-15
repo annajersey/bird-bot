@@ -1,7 +1,7 @@
 import { Client, Message, TextChannel } from 'discord.js';
 import { birdBotImage, prefixList } from './constants';
 import {
-  Currency, getGeneralChatId, Options, updateGeneralChatId,
+  Currency, Options, updateGeneralChatId, updateParrotChatId,
 } from './db';
 import { getGeneralChannel } from './birdbot';
 
@@ -23,6 +23,15 @@ export const setGeneralChatId = async (message: Message) => {
   try {
     await updateGeneralChatId(generalChatID);
     message.channel.send('General ChatID changed :white_check_mark:');
+  } catch (e) {
+    message.channel.send('Error');
+  }
+};
+export const setParrotChatId = async (message: Message) => {
+  const parrotChatID = message.content.split(' ').pop()!;
+  try {
+    await updateParrotChatId(parrotChatID);
+    message.channel.send('Parrot ChatID changed :white_check_mark:');
   } catch (e) {
     message.channel.send('Error');
   }

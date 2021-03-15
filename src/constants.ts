@@ -1,4 +1,10 @@
 export const prefixList = ['!birdbot', '!bb', '<@788147829315076106>', '<@!788147829315076106>'];
+export enum UserRole {
+  User = 0,
+  Admin = 1,
+}
+export const GENERAL_CHAT_KEY = 'generalChatId';
+export const PARROT_CHAT_KEY = 'parrotChatId';
 export const multilanguageChirps = [
   'ligjërim :flag_al:',
   'чырык :flag_by:',
@@ -52,12 +58,6 @@ export const birdBotImage = (phrase: string) => `━━━━━━━━━━�
 　　　　┃┃
 ━━━━┻┻━━━━`;
 /* eslint-enable no-irregular-whitespace */
-export const botParrotChatId = '820390132078870550'; // TODO: save in DB with admin command
-
-export enum UserRole {
-  User = 0,
-  Admin = 1,
-}
 
 export const helpText = `
 Bot Prefixes: !birdbot, !bb, or bot mention.
@@ -77,4 +77,5 @@ Also:
 **Admin Commands**: 
 !bb send random bird: *make a wild bird to appear*
 !bb set general chat id 12345: *sets id of the main chat*
+!bb set parrot chat id 12345: *sets id of the parrot chat*
 `

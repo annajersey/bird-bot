@@ -1,9 +1,7 @@
 import Discord, { Message, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
-import {
-  botParrotChatId, UserRole,
-} from './constants';
-import { DBinit, getGeneralChatId } from './db';
+import { UserRole } from './constants';
+import { DBinit, getGeneralChatId, getParrotChatId } from './db';
 import {
   getPrefix,
   randomiseBirdAppearance,
@@ -25,7 +23,8 @@ export const getGeneralChannel = () => {
 
 client.on('message', (msg: Discord.Message) => {
   const generalChannel = getGeneralChannel();
-  if (msg.channel.id === botParrotChatId) {
+  const parrotChatId = getParrotChatId();
+  if (msg.channel.id === parrotChatId) {
     return generalChannel && generalChannel.send(msg.content);
   }
 
@@ -33,9 +32,7 @@ client.on('message', (msg: Discord.Message) => {
   if (!prefix || msg.author.bot) return;
 
   const cleanCommand = msg.content.replace(prefix, '').trim() || 'chirp';
-  const commandName = cleanCommand.replace(/<@(.*?)>/,'').trim();
-
-  const command = commands[commandName];
+  const command = commands.find((command) => cleanCommand.startsWith(command.key));
   if (!command) return;
   if (command.role === UserRole.Admin && !msg?.member?.hasPermission('ADMINISTRATOR')) return;
   command.execute(msg);
