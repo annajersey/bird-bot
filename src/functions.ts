@@ -16,7 +16,7 @@ export const sendRandomBird = async (client: Client) => {
       value: 1,
     });
   }
-  if (channel) channel.send(birdBotImage('*A random bird appeared!\n Type* !catchbird *to catch the bird*'));
+  if (channel) channel.send(birdBotImage('*A random bird appeared!\n Type* !bb catchbird *to catch the bird*'));
 };
 export const setGeneralChatId = async (message: Message) => {
   const generalChatID = message.content.split(' ').pop()!;

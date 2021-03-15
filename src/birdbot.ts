@@ -25,34 +25,27 @@ client.once('ready', async () => {
 });
 
 client.on('message', (msg: Discord.Message) => {
-  const handleCommand = (command: string, handle: () => void) => {
-    const prefix = getPrefix(msg.content);
-    if (!prefix) return;
-    const cleanCommand = msg.content.replace(prefix, '').trim();
-    if (!cleanCommand) {
-      const ind = Math.floor(Math.random() * mixedChirps.length);
-      return msg.reply(mixedChirps[ind]);
-    }
+  const prefix = getPrefix(msg.content);
+  if (!prefix) return;
+  const cleanCommand = msg.content.replace(prefix, '').trim();
 
+  const handleCommand = (command: string, handle: () => void) => {
     if (cleanCommand.startsWith(command)) {
       return handle();
     }
   };
 
   const handleAdminCommand = (command: string, handle: () => void) => {
-    const prefix = getPrefix(msg.content);
-    if (!prefix) return;
-
-    const cleanCommand = msg.content.replace(prefix, '').trim();
     if (!msg.member || !msg.member.hasPermission('ADMINISTRATOR')) return;
     if (msg.content.includes(command)) { return handle(); }
   };
 
-  if (msg.content === '!catchbird') return catchTheBird(msg);
-
   handleCommand('chirp', () => {
     const ind = Math.floor(Math.random() * multilanguageChirps.length);
     return msg.reply(multilanguageChirps[ind]);
+  });
+  handleCommand('catchbird', () => {
+    return catchTheBird(msg);
   });
   handleCommand('quote the raven', () => msg.reply('nevermore'));
   handleCommand('hug', () => msg.channel.send(`${msg.author} hugs ${msg.mentions.users.first() || 'an air'}`));
@@ -66,6 +59,10 @@ client.on('message', (msg: Discord.Message) => {
   handleAdminCommand('send random bird', () => sendRandomBird(client));
   handleAdminCommand('set general chat id', async () => {
     await setGeneralChatId(msg);
+  });
+  handleCommand('', () => {
+    const ind = Math.floor(Math.random() * mixedChirps.length);
+    return msg.reply(mixedChirps[ind]);
   });
 
   if (msg.channel.id === botParrotChatId) {
