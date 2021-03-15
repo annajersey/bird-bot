@@ -33,8 +33,10 @@ client.on('message', (msg: Discord.Message) => {
   if (!prefix || msg.author.bot) return;
 
   const cleanCommand = msg.content.replace(prefix, '').trim() || 'chirp';
+  const commandName = cleanCommand.replace(/<@(.*?)>/,'').trim();
 
-  const command = commands[cleanCommand];
+  const command = commands[commandName];
+  if (!command) return;
   if (command.role === UserRole.Admin && !msg?.member?.hasPermission('ADMINISTRATOR')) return;
   command.execute(msg);
 });
