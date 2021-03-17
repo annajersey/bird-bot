@@ -10,16 +10,19 @@ import randomiseBirdAppearance from './randomiseBird';
 
 dotenv.config({ path: '.env' });
 const client = new Client();
+
 export const getGeneralChannel = () => {
   const generalChatId = getGeneralChatId();
   return client.channels.cache.get(generalChatId) as TextChannel;
 };
 export const main = () => {
   client.once('ready', async () => {
-    await DBinit();
+    //
   });
 
-  client.on('message', (msg: Message) => {
+  client.on('message', async (msg: Message) => {
+    const serverID = msg?.guild?.id;
+    await DBinit(serverID);
     const generalChannel = getGeneralChannel();
     const parrotChatId = getParrotChatId();
     if (msg.channel.id === parrotChatId) {

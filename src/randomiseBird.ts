@@ -5,6 +5,6 @@ const randomiseBird = () => {
   setTimeout(() => {
     sendRandomBird();
     randomiseBird();
-  }, 1000 * 60 * 60 * rand);
+  }, 1000 * 60 * 60 * 2 * rand);
 };
 export default { randomiseBirdAppearance: randomiseBird };

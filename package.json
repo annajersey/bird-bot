@@ -40,5 +40,13 @@
     "pg-hstore": "^2.3.3",
     "rimraf": "^3.0.2",
     "sequelize": "^6.5.1"
+  },
+  "jest": {
+  "testEnvironment": "node",
+
+  "transform": {
+    "^.+\\.ts?$": "ts-jest"
   }
+}
+
 }
