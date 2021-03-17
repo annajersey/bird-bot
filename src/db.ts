@@ -1,6 +1,6 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
-import {GENERAL_CHAT_KEY, PARROT_CHAT_KEY} from './constants';
+import { GENERAL_CHAT_KEY, PARROT_CHAT_KEY } from './constants';
 
 dotenv.config({ path: '.env' });
 let generalChatId = '';

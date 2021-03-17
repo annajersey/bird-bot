@@ -65,11 +65,3 @@ export const catchTheBird = async (message: Message) => {
     return message.channel.send('Error');
   }
 };
-
-export const randomiseBirdAppearance = () => {
-  const rand = Math.ceil(Math.random() * 24);
-  setTimeout(() => {
-    sendRandomBird();
-    randomiseBirdAppearance();
-  }, 1000 * 60 * 60 * rand);
-};

@@ -1,43 +1,43 @@
-import Discord, { Message, TextChannel } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import { UserRole } from './constants';
 import { DBinit, getGeneralChatId, getParrotChatId } from './db';
 import {
   getPrefix,
-  randomiseBirdAppearance,
 } from './functions';
 import commands from './commands';
+import randomiseBirdAppearance from './randomiseBird';
 
 dotenv.config({ path: '.env' });
-
-const client = new Discord.Client();
-
-client.once('ready', async () => {
-  await DBinit();
-});
-
+const client = new Client();
 export const getGeneralChannel = () => {
   const generalChatId = getGeneralChatId();
   return client.channels.cache.get(generalChatId) as TextChannel;
 };
+export const main = () => {
+  client.once('ready', async () => {
+    await DBinit();
+  });
 
-client.on('message', (msg: Discord.Message) => {
-  const generalChannel = getGeneralChannel();
-  const parrotChatId = getParrotChatId();
-  if (msg.channel.id === parrotChatId) {
-    return generalChannel && generalChannel.send(msg.content);
-  }
+  client.on('message', (msg: Message) => {
+    const generalChannel = getGeneralChannel();
+    const parrotChatId = getParrotChatId();
+    if (msg.channel.id === parrotChatId) {
+      return generalChannel && generalChannel.send(msg.content);
+    }
 
-  const prefix = getPrefix(msg.content);
-  if (!prefix || msg.author.bot) return;
+    const prefix = getPrefix(msg.content);
+    if (!prefix) return;
 
-  const cleanCommand = msg.content.replace(prefix, '').trim() || 'chirp';
-  const command = commands.find((command) => cleanCommand.startsWith(command.key));
-  if (!command) return;
-  if (command.role === UserRole.Admin && !msg?.member?.hasPermission('ADMINISTRATOR')) return;
-  command.execute(msg);
-});
+    const cleanCommand = msg.content.replace(prefix, '').trim() || 'chirp';
+    const command = commands.find((command) => cleanCommand.startsWith(command.key));
+    if (!command) return;
+    if (command.role === UserRole.Admin && !msg?.member?.hasPermission('ADMINISTRATOR')) return;
+    command.execute(msg);
+  });
 
-client.login(process.env.BOTTOKEN);
+  client.login(process.env.BOTTOKEN);
 
-randomiseBirdAppearance();
+  randomiseBirdAppearance.randomiseBirdAppearance();
+};
+main();

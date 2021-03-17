@@ -77,4 +77,4 @@ Also:
 !bb send random bird: *make a wild bird to appear*
 !bb set general chat id 12345: *sets id of the main chat*
 !bb set parrot chat id 12345: *sets id of the parrot chat*
-`
+`;
