@@ -1,7 +1,7 @@
 import { Client, Message, TextChannel } from 'discord.js';
 import { birdBotImage, prefixList } from './constants';
 import {
-  Currency, Options, updateGeneralChatId, updateParrotChatId, getServerId
+  Currency, Options, updateGeneralChatId, updateParrotChatId, getServerId, updateRandomBirdFrequency
 } from './db';
 import { getGeneralChannel } from './birdbot';
 
@@ -25,6 +25,15 @@ export const setGeneralChatId = async (message: Message) => {
   try {
     await updateGeneralChatId(generalChatID);
     message.channel.send('General ChatID changed :white_check_mark:');
+  } catch (e) {
+    message.channel.send('Error');
+  }
+};
+export const sendRandomBirdFrequency = async (message: Message) => {
+  try {
+    const frequency = message.content.split(' ').pop()!;
+    await updateRandomBirdFrequency(frequency);
+    message.channel.send(`Now random bird will appear once in ${frequency} days :white_check_mark:`);
   } catch (e) {
     message.channel.send('Error');
   }

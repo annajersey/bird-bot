@@ -5,6 +5,7 @@ export enum UserRole {
 }
 export const GENERAL_CHAT_KEY = 'generalChatId';
 export const PARROT_CHAT_KEY = 'parrotChatId';
+export const FREQUENCY_CHAT_KEY = 'frequency';
 export const multilanguageChirps = [
   'ligjërim :flag_al:',
   'чырык :flag_by:',
@@ -77,4 +78,5 @@ Also:
 !bb send random bird: *make a wild bird to appear*
 !bb set general chat id 12345: *sets id of the main chat*
 !bb set parrot chat id 12345: *sets id of the parrot chat*
+!!bb set frequency 5: random bird will appear once in 5 days
 `;

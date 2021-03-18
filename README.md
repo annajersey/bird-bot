@@ -14,10 +14,13 @@ Type **!bb help** to see the list of commands
 
 **Catch Random Bird**
 
-Once a day at a random time a wild bird will appear. 
+Once in the defined amount of days at a random time a wild bird will appear. 
 Type `!birdbot catchbird` to catch the bird. Type `!bb amount` to check how many birds you have. Admin also has the power to trigger bird's emergence at any time
 
 ![birdbot](https://api.monosnap.com/file/download?id=YMCd1YPPLsb1Hng7yfxlPHvBayJ9eG)
+
+Admin can set frequency in days:
+![birdbot](https://api.monosnap.com/file/download?id=6zAasvgDIv9Fqn8gODOQWJQ1D9YZna)
 
 ----------------------
 **Talking Parrot**

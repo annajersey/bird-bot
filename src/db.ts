@@ -1,12 +1,12 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
-import { GENERAL_CHAT_KEY, PARROT_CHAT_KEY } from './constants';
-
+import { FREQUENCY_CHAT_KEY, GENERAL_CHAT_KEY, PARROT_CHAT_KEY } from './constants';
 
 dotenv.config({ path: '.env' });
 let generalChatId = '';
 let parrotChatId = '';
 let serverID = '';
+let frequency: string;
 const sequelize = new Sequelize(
     process.env.DB_NAME!,
   process.env.DB_USERNAME!,
@@ -60,16 +60,40 @@ export const DBinit = async (guildID?: string) => {
 
 export const updateGeneralChatId = async (newGeneralChatID:string) => {
   const findChatId = await Options.findOne({ where: { key: GENERAL_CHAT_KEY, serverID } });
-  console.log(findChatId, serverID)
+  console.log(findChatId, serverID);
   if (!findChatId) {
     await Options.create({
       key: GENERAL_CHAT_KEY,
       value: newGeneralChatID,
-      serverID
+      serverID,
     });
   } else if (findChatId.get('value') !== newGeneralChatID) {
-    await Options.update({ value: newGeneralChatID }, { where: { key: GENERAL_CHAT_KEY } });
+    await Options.update({ value: newGeneralChatID },
+      { where: { key: GENERAL_CHAT_KEY, serverID } });
     generalChatId = newGeneralChatID;
+  }
+};
+
+export const getFrequency = async () => {
+  if (!frequency) {
+    const frequencyData = await Options.findOne({ where: { key: FREQUENCY_CHAT_KEY, serverID } });
+    if (frequencyData) frequency = frequencyData.get('value') as string;
+
+    return frequency;
+  }
+};
+
+export const updateRandomBirdFrequency = async (newFrequency: string) => {
+  const frequencyData = await Options.findOne({ where: { key: FREQUENCY_CHAT_KEY, serverID } });
+  if (!frequencyData) {
+    await Options.create({
+      key: FREQUENCY_CHAT_KEY,
+      value: newFrequency,
+      serverID,
+    });
+  } else if (frequencyData.get('value') !== newFrequency) {
+    await Options.update({ value: newFrequency }, { where: { key: FREQUENCY_CHAT_KEY, serverID } });
+    frequency = newFrequency;
   }
 };
 
