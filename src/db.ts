@@ -1,12 +1,16 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
-import { FREQUENCY_CHAT_KEY, GENERAL_CHAT_KEY, PARROT_CHAT_KEY } from './constants';
+import {
+  CURRENCY_AVAILABLE_KEY, FREQUENCY_CHAT_KEY, GENERAL_CHAT_KEY, PARROT_CHAT_KEY,
+} from './constants';
 
 dotenv.config({ path: '.env' });
-let generalChatId = '';
-let parrotChatId = '';
-let serverID = '';
+let generalChatId: string;
+let parrotChatId: string;
+let serverID: string;
 let frequency: string;
+let currencyAvailable: boolean;
+
 const sequelize = new Sequelize(
     process.env.DB_NAME!,
   process.env.DB_USERNAME!,
@@ -52,15 +56,10 @@ export const DBinit = async (guildID?: string) => {
   serverID = guildID;
   await Currency.sync();
   await Options.sync();
-  const findGeneralChatId = await Options.findOne({ where: { key: GENERAL_CHAT_KEY, serverID } });
-  if (findGeneralChatId) generalChatId = findGeneralChatId.get('value') as string;
-  const findParrotChatId = await Options.findOne({ where: { key: PARROT_CHAT_KEY, serverID } });
-  if (findParrotChatId) parrotChatId = findParrotChatId.get('value') as string;
 };
 
 export const updateGeneralChatId = async (newGeneralChatID:string) => {
   const findChatId = await Options.findOne({ where: { key: GENERAL_CHAT_KEY, serverID } });
-  console.log(findChatId, serverID);
   if (!findChatId) {
     await Options.create({
       key: GENERAL_CHAT_KEY,
@@ -76,9 +75,12 @@ export const updateGeneralChatId = async (newGeneralChatID:string) => {
 
 export const getFrequency = async () => {
   if (!frequency) {
-    const frequencyData = await Options.findOne({ where: { key: FREQUENCY_CHAT_KEY, serverID } });
-    if (frequencyData) frequency = frequencyData.get('value') as string;
-
+    try {
+      const frequencyData = await Options.findOne({ where: { key: FREQUENCY_CHAT_KEY, serverID } });
+      if (frequencyData) frequency = frequencyData.get('value') as string;
+    } catch (e) {
+      console.log(e);
+    }
     return frequency;
   }
 };
@@ -111,7 +113,45 @@ export const updateParrotChatId = async (newParrotChatID: string) => {
     parrotChatId = newParrotChatID;
   }
 };
+export const setCurrencyAvailable = async (currencyAvailableValue: number) => {
+  await Options.update(
+    { value: currencyAvailableValue },
+    { where: { key: CURRENCY_AVAILABLE_KEY, serverID } },
+  );
+  currencyAvailable = !!currencyAvailableValue;
+};
 
-export const getGeneralChatId = () => generalChatId;
-export const getParrotChatId = () => parrotChatId;
+export const getGeneralChatId = async () => {
+  if (!serverID) return;
+  if (generalChatId) return generalChatId;
+  try {
+    const findGeneralChatId = await Options.findOne({ where: { key: GENERAL_CHAT_KEY, serverID } });
+    if (findGeneralChatId) generalChatId = findGeneralChatId.get('value') as string;
+  } catch (e) {
+    console.log(e);
+  }
+  return generalChatId;
+};
+export const getParrotChatId = async () => {
+  if (!serverID) return;
+  if (parrotChatId) return parrotChatId;
+  try {
+    const findParrotChatId = await Options.findOne({ where: { key: PARROT_CHAT_KEY, serverID } });
+    if (findParrotChatId) parrotChatId = findParrotChatId.get('value') as string;
+  } catch (e) {
+    console.log(e);
+  }
+  return parrotChatId;
+};
+
+export const getCurrencyAvailable = async () => {
+  if (!serverID) return;
+  if (currencyAvailable !== undefined) return currencyAvailable;
+  const findCurrencyAvailable = await Options.findOne(
+    { where: { key: CURRENCY_AVAILABLE_KEY, serverID } },
+  );
+  if (findCurrencyAvailable) currencyAvailable = !!findCurrencyAvailable.get('value');
+  return currencyAvailable;
+};
+
 export const getServerId = () => serverID;

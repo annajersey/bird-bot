@@ -1,24 +1,34 @@
 import { Client, Message, TextChannel } from 'discord.js';
 import { birdBotImage, prefixList } from './constants';
 import {
-  Currency, Options, updateGeneralChatId, updateParrotChatId, getServerId, updateRandomBirdFrequency
+  Currency,
+  Options,
+  updateGeneralChatId,
+  updateParrotChatId,
+  getServerId,
+  updateRandomBirdFrequency,
+  getCurrencyAvailable,
+  setCurrencyAvailable, getGeneralChatId,
 } from './db';
-import { getGeneralChannel } from './birdbot';
+import { getClient } from './birdbot';
+import randomiseBirdAppearance from "./randomiseBird";
 
 export const getPrefix = (command: string) => prefixList.find((p: string) => command.startsWith(p));
 
 export const sendRandomBird = async () => {
-  const serverID = getServerId();
-  const generalChannel = getGeneralChannel();
-  const canCatch = await Options.findOne({ where: { key: 'currencyAvailable', serverID } });
+  const canCatch = await getCurrencyAvailable();
+  const generalChatId = await getGeneralChatId();
   if (!canCatch) {
-    await Options.create({
-      key: 'currencyAvailable',
-      value: 1,
-      serverID,
-    });
+    await setCurrencyAvailable(1);
   }
-  if (generalChannel) await generalChannel.send(birdBotImage('*A random bird appeared!\n Type* !bb catchbird *to catch the bird*'));
+  const client = getClient();
+
+  const channel = generalChatId && client.channels.cache.get(generalChatId) as TextChannel;
+  if (channel) {
+    channel.send(
+      birdBotImage('*A random bird appeared!\n Type* !bb catchbird *to catch the bird*'),
+    );
+  }
 };
 export const setGeneralChatId = async (message: Message) => {
   const generalChatID = message.content.split(' ').pop()!;
@@ -33,6 +43,8 @@ export const sendRandomBirdFrequency = async (message: Message) => {
   try {
     const frequency = message.content.split(' ').pop()!;
     await updateRandomBirdFrequency(frequency);
+    randomiseBirdAppearance.stopBird();
+    await randomiseBirdAppearance.randomiseBirdAppearance();
     message.channel.send(`Now random bird will appear once in ${frequency} days :white_check_mark:`);
   } catch (e) {
     message.channel.send('Error');
@@ -58,8 +70,8 @@ export const checkAmount = async (message: Message) => {
 export const catchTheBird = async (message: Message) => {
   const serverID = getServerId();
   try {
-    const canCatch = await Options.findOne({ where: { key: 'currencyAvailable', serverID } });
-    if (!canCatch) return message.channel.send('Bird flew away...');
+    const canCatch = await getCurrencyAvailable();
+    if (!canCatch) return message.channel.send('Bird flew away...Wait till a new one will appear');
     let amountData = await Currency.findOne({ where: { userID: message.author.id } });
     if (amountData) {
       await amountData.increment('amount');
@@ -69,7 +81,7 @@ export const catchTheBird = async (message: Message) => {
         amount: 1,
       });
     }
-    await Options.destroy({ where: { key: 'currencyAvailable' } });
+    await setCurrencyAvailable(0);
     const amount = amountData.get('amount') as number;
     return message.channel.send(`Nice catch, ${message.author}! You now have ${amount} bird${amount > 1 ? 's' : ''}!`);
   } catch (e) {
