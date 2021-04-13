@@ -2,6 +2,8 @@
 
 ### Discord bot that chirps
 
+⭐ **Invite:** https://top.gg/bot/788147829315076106
+
 Prefixes: 
 
 - !birdbot
