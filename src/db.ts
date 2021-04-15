@@ -128,5 +128,5 @@ export const getCurrencyAvailable = async (serverID: string) => {
   const findCurrencyAvailable = await Options.findOne(
     { where: { key: CURRENCY_AVAILABLE_KEY, serverID } },
   );
-  return !!findCurrencyAvailable?.get('value');
+  return !!parseInt(findCurrencyAvailable?.get('value') as string);
 };
