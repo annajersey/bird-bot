@@ -1,18 +1,29 @@
+import { Message } from 'discord.js';
 import { sendRandomBird } from './functions';
 import { getFrequency } from './db';
 
-let timeoutKey: any;
-const randomiseBird = async () => {
-  const frequency = await getFrequency();
+const timeoutKey: {[n: string]: any} = {}
+const randomiseBird = async (message: Message) => {
+  const serverID = message?.guild?.id;
+  if (!serverID) return;
+  const frequency = await getFrequency(serverID);
   const days = parseInt(frequency || '1');
   const rand = Math.ceil(Math.random() * 24);
-  timeoutKey = setTimeout(() => {
-    sendRandomBird();
-    randomiseBird();
-  }, 1000 * 60 * 60 * days * rand);
+  try {
+    timeoutKey[serverID] = setTimeout(() => {
+      sendRandomBird(message);
+      randomiseBird(message);
+    }, 1000 * 60 * 60 * days * rand);
+  } catch (e) {
+    console.log('timeout error', e);
+  }
 };
 
-const stopBird = () => {
-  clearTimeout(timeoutKey);
-}
+const stopBird = (serverID: string) => {
+  try {
+    if (timeoutKey?.[serverID]) clearTimeout(timeoutKey[serverID]);
+  } catch (e) {
+    console.log(e);
+  }
+};
 export default { randomiseBirdAppearance: randomiseBird, stopBird };

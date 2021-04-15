@@ -5,21 +5,24 @@ import {
   Options,
   updateGeneralChatId,
   updateParrotChatId,
-  getServerId,
   updateRandomBirdFrequency,
   getCurrencyAvailable,
   setCurrencyAvailable, getGeneralChatId,
 } from './db';
 import { getClient } from './birdbot';
-import randomiseBirdAppearance from "./randomiseBird";
+import randomiseBirdAppearance from './randomiseBird';
 
 export const getPrefix = (command: string) => prefixList.find((p: string) => command.startsWith(p));
 
-export const sendRandomBird = async () => {
-  const canCatch = await getCurrencyAvailable();
-  const generalChatId = await getGeneralChatId();
+export const sendRandomBird = async (message: Message) => {
+  const serverID = message?.guild?.id;
+  if (!serverID) return;
+  const canCatch = await getCurrencyAvailable(serverID);
+
+  const generalChatId = await getGeneralChatId(serverID);
+
   if (!canCatch) {
-    await setCurrencyAvailable(1);
+    await setCurrencyAvailable(1, serverID);
   }
   const client = getClient();
 
@@ -31,9 +34,11 @@ export const sendRandomBird = async () => {
   }
 };
 export const setGeneralChatId = async (message: Message) => {
+  const serverID = message?.guild?.id;
+  if (!serverID) return;
   const generalChatID = message.content.split(' ').pop()!;
   try {
-    await updateGeneralChatId(generalChatID);
+    await updateGeneralChatId(generalChatID, serverID);
     message.channel.send('General ChatID changed :white_check_mark:');
   } catch (e) {
     message.channel.send('Error');
@@ -42,18 +47,22 @@ export const setGeneralChatId = async (message: Message) => {
 export const sendRandomBirdFrequency = async (message: Message) => {
   try {
     const frequency = message.content.split(' ').pop()!;
-    await updateRandomBirdFrequency(frequency);
-    randomiseBirdAppearance.stopBird();
-    await randomiseBirdAppearance.randomiseBirdAppearance();
+    const serverID = message?.guild?.id;
+    if (!serverID) return;
+    await updateRandomBirdFrequency(frequency, serverID);
+    randomiseBirdAppearance.stopBird(serverID);
+    await randomiseBirdAppearance.randomiseBirdAppearance(message);
     message.channel.send(`Now random bird will appear once in ${frequency} days :white_check_mark:`);
   } catch (e) {
-    message.channel.send('Error');
+    message.channel.send(e);
   }
 };
 export const setParrotChatId = async (message: Message) => {
   const parrotChatID = message.content.split(' ').pop()!;
+  const serverID = message?.guild?.id;
+  if (!serverID) return;
   try {
-    await updateParrotChatId(parrotChatID);
+    await updateParrotChatId(parrotChatID, serverID);
     message.channel.send('Parrot ChatID changed :white_check_mark:');
   } catch (e) {
     message.channel.send('Error');
@@ -68,9 +77,10 @@ export const checkAmount = async (message: Message) => {
   return message.reply('Nothing`s here');
 };
 export const catchTheBird = async (message: Message) => {
-  const serverID = getServerId();
+  const serverID = message?.guild?.id;
+  if (!serverID) return;
   try {
-    const canCatch = await getCurrencyAvailable();
+    const canCatch = await getCurrencyAvailable(serverID);
     if (!canCatch) return message.channel.send('Bird flew away...Wait till a new one will appear');
     let amountData = await Currency.findOne({ where: { userID: message.author.id } });
     if (amountData) {
@@ -81,7 +91,7 @@ export const catchTheBird = async (message: Message) => {
         amount: 1,
       });
     }
-    await setCurrencyAvailable(0);
+    await setCurrencyAvailable(0, serverID);
     const amount = amountData.get('amount') as number;
     return message.channel.send(`Nice catch, ${message.author}! You now have ${amount} bird${amount > 1 ? 's' : ''}!`);
   } catch (e) {

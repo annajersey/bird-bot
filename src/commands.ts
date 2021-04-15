@@ -3,7 +3,12 @@ import {
   helpText, mixedChirps, randomTopics, UserRole,
 } from './constants';
 import {
-  catchTheBird, checkAmount, sendRandomBird, sendRandomBirdFrequency, setGeneralChatId, setParrotChatId,
+  catchTheBird,
+  checkAmount,
+  sendRandomBird,
+  sendRandomBirdFrequency,
+  setGeneralChatId,
+  setParrotChatId,
 } from './functions';
 
 type Commands = Array< {key: string, execute: (msg: Message) => void, role: UserRole}>
@@ -81,7 +86,7 @@ const commands: Commands = [
   },
   {
     key: 'send random bird',
-    execute: async (_: Message) => sendRandomBird(),
+    execute: async (message: Message) => sendRandomBird(message),
     role: UserRole.Admin,
   },
   {
