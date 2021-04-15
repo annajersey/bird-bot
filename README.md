@@ -1,5 +1,7 @@
 # Bird Bot
 
+!!! Multiserver support is broken. Please wait for the fix !!!
+
 ### Discord bot that chirps
 
 ⭐ **Invite:** https://top.gg/bot/788147829315076106
